@@ -14,7 +14,7 @@ import java.text.DecimalFormatSymbols;
  * Beschreibung
  *
  * @version 1.0 vom 11.10.2022
- * @author
+ * @author Cedric Ebert
  */
 
 public class Rechner extends JFrame {
