@@ -1,2 +1,1 @@
-Class-Path: JEClasses.jar
 Main-Class: Rechner
