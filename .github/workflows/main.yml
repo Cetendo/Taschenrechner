@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: CREATE JAR
 
 # Controls when the workflow will run
 on:
@@ -44,7 +44,7 @@ jobs:
         with:
           #repo: <owner>/<repoName> # defaults to current repo
           keep_latest: 3
-          delete_tag: ture
+          delete_tag: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           
