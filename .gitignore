@@ -1,5 +1,4 @@
 *.~fm
 *.~ava
 
-.github/workflows
-.github/workflows.*
+/.github
