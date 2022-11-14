@@ -14,7 +14,7 @@ import java.text.DecimalFormatSymbols;
  * Beschreibung
  *
  * @version 1.0 vom 11.10.2022
- * @author 
+ * @author Cetendo
  */
 
 public class Rechner extends JFrame {
@@ -307,7 +307,7 @@ public class Rechner extends JFrame {
         } // end of if-else
       } // end of if-else */
       lblUnten.setText(df.format(zahl3));
-      System.out.println((String.format("%f", zahl3));
+      System.out.println(String.format("%f", zahl3));
     } else {
       System.out.println("zahl zulang");  
     } // end of if-else
