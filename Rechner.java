@@ -13,8 +13,8 @@ import java.text.DecimalFormatSymbols;
  *
  * Beschreibung
  *
- * @version 2.0 vom 11.10.2022
- * @author Cetendo 
+ * @version 1.0 vom 11.10.2022
+ * @author 
  */
 
 public class Rechner extends JFrame {
@@ -307,7 +307,7 @@ public class Rechner extends JFrame {
         } // end of if-else
       } // end of if-else */
       lblUnten.setText(df.format(zahl3));
-      System.out.println(String.format("%f", zahl3));
+      System.out.println((String.format("%f", zahl3));
     } else {
       System.out.println("zahl zulang");  
     } // end of if-else
@@ -616,7 +616,7 @@ public class Rechner extends JFrame {
         throw new ArithmeticException("divide by zero");
       // 1 is not supported with branchfree algorithm
       assert (!branchfree || d != 1);
-                   
+      
       long resultMagic;
       int resultMore;
       int floor_log_2_d = 63 - Long.numberOfLeadingZeros(d);
