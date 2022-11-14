@@ -13,7 +13,7 @@ import java.text.DecimalFormatSymbols;
  *
  * Beschreibung
  *
- * @version 1.0 vom 11.10.2022
+ * @version 2.0 vom 11.10.2022
  * @author Cetendo 
  */
 
