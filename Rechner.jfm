@@ -1,6 +1,6 @@
 object Rechner: TFGUIForm
-  Left = 479
-  Top = 194
+  Left = 340
+  Top = 346
   BorderIcons = [biSystemMenu]
   Caption = 'Rechner'
   ClientHeight = 262
