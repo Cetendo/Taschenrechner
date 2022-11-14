@@ -616,7 +616,7 @@ public class Rechner extends JFrame {
         throw new ArithmeticException("divide by zero");
       // 1 is not supported with branchfree algorithm
       assert (!branchfree || d != 1);
-      
+                   
       long resultMagic;
       int resultMore;
       int floor_log_2_d = 63 - Long.numberOfLeadingZeros(d);
