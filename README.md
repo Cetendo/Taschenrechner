@@ -9,4 +9,4 @@ https://github.com/PoslavskySV/libdivide4j habe ich für schnelles Dividieren ve
 
 ## TODO
 * Calculation
-* Entering Numbers
+* Entering Numbers correctly
