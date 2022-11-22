@@ -2,3 +2,11 @@
 Als Vorlage dient mir der Taschenrechner von Windows 10/11
 
 https://github.com/PoslavskySV/libdivide4j habe ich für schnelles Dividieren verwendet
+
+## Curent Features
+* Keystroks
+* Window Resizing
+
+## TODO
+* Calculation
+* Entering Numbers
