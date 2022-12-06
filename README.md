@@ -9,7 +9,8 @@ https://github.com/PoslavskySV/libdivide4j habe ich für schnelles Dividieren ve
 ## Curent Features
 * Keystroks
 * Window Resizing
-
-## TODO
 * Calculation
 * Entering Numbers correctly
+
+## TODO
+* IDK
