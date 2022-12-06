@@ -8,6 +8,7 @@ import java.lang.reflect.*;
 import static java.lang.Math.toIntExact;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.math.BigDecimal;
 
 /**
  *
@@ -53,10 +54,10 @@ public class Rechner extends JFrame {
     // Frame-Initialisierung
     super();
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    int frameWidth = 300;
-    int frameHeight = 300;
+    int frameWidth = 400;
+    int frameHeight = 510;
     setSize(frameWidth, frameHeight);
-    setMinimumSize(new Dimension(200, 250));
+    setMinimumSize(new Dimension(340, 410));
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
     int x = (d.width - getSize().width) / 2;
     int y = (d.height - getSize().height) / 2;
@@ -95,6 +96,7 @@ public class Rechner extends JFrame {
     lblUnten.setOpaque(true);
     lblUnten.setHorizontalAlignment(SwingConstants.RIGHT);
     lblUnten.setText("0");
+    lblUnten.setFont(new Font("Dialog", Font.BOLD, 16));
     //lblUnten.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
     pnlErgebnis.add(lblUnten);
     cp.add(pnlFenster);
@@ -244,8 +246,12 @@ public class Rechner extends JFrame {
     "NUMPAD4", "NUMPAD5", "NUMPAD6", "SUBTRACT",
     "NUMPAD1", "NUMPAD2", "NUMPAD3", "ADD",
     "none", "NUMPAD0", "DECIMAL", "ENTER"};
-  public static double zahl1, zahl2, zahl3 = 0;
+  public static BigDecimal zahl1 = new BigDecimal("0");
+  public static BigDecimal zahl2 = new BigDecimal("0");
+  public static BigDecimal zahl3 = new BigDecimal("0");
+  public static char vorZeichen, zeichen = 'n';
   public static int kommaStelle = 0; // Wie viele Stellen hinterm Komma die Eingabe ist. 0 = kein Komma
+  public static boolean logKeys = false;
         
         // Anfang Methoden
         
@@ -275,44 +281,131 @@ public class Rechner extends JFrame {
   } // end of pnlFenster_AncestorResized  
         
   public void btnX_MouseEntered(MouseEvent evt) {
-    // TODO hier Quelltext einfügen
     ((JButton)evt.getSource()).setForeground(Color.blue);
     ((JButton)evt.getSource()).setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
   } // end of btnx_MouseEntered
         
   public void btnX_MouseExited(MouseEvent evt) {
-    // TODO hier Quelltext einfügen
     Color geileFarbe = new Color(212, 8, 59);
     ((JButton)evt.getSource()).setForeground(Color.red);
     ((JButton)evt.getSource()).setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, geileFarbe));
   } // end of btnx_MouseExited
   
   public void numberPressed(int number) {
-    String pattern = "##.#######";
-    DecimalFormat df = new DecimalFormat(pattern);
+    int length = 0; // check lenght of the number
+    String[] split = zahl3.toString()
+            .split("\\.");
+    for (String element : split) {
+    	length = length + element.length();
+    }
     
-    double max = Math.pow(10, 30);
-    if (zahl3 <= max && kommaStelle < 30) {
-      //if (kommaStelle == 0) {
-        if (zahl3 != 0) {
-          zahl3 = zahl3 * 10 + number;
+    if (length < 25 && kommaStelle >= 0) {
+      if (kommaStelle == 0) {
+        if (zahl3.compareTo(BigDecimal.valueOf(0)) != 0) {
+          zahl3 = zahl3.multiply(BigDecimal.valueOf(10)).add(BigDecimal.valueOf(number));
         } else {
-          zahl3 = number;
+          zahl3 = BigDecimal.valueOf(number);
         } // end of if-else
-      /*} else {
+      } else {
         if (number != 0) {
-          zahl3 = zahl3 + (number/Math.pow(10, kommaStelle));
-          System.out.println(df.format(zahl3)+" \n "+(df.format(Math.pow(10, kommaStelle)))); 
+          zahl3 = zahl3.add(BigDecimal.valueOf(number).divide(BigDecimal.valueOf(10).pow(kommaStelle))); 
           kommaStelle++;
         } // end of if-else
-      } // end of if-else */
-      lblUnten.setText(df.format(zahl3));
-      System.out.println((String.format("%f", zahl3));
+      } // end of if-else 
+      lblUnten.setText(zahl3.toString());
+      //System.out.println(zahl3.toString());
     } else {
       System.out.println("zahl zulang");  
     } // end of if-else
   }
   
+  public void rechenZeichen(char c) {
+	  zahl3 = BigDecimal.valueOf(Double.valueOf(lblUnten.getText())).stripTrailingZeros();
+	    if (!zahl3.equals(BigDecimal.valueOf(0)) /*zahl3 != 0*/) {
+	      if (vorZeichen == 'n') {
+	        vorZeichen = c;
+	        // TODO 12 + = ist 12 12 = 0
+	      } else {
+	        zeichen = vorZeichen;
+	        vorZeichen = c;
+	      } // end of if-else
+	      if (!zahl1.equals(BigDecimal.valueOf(0)) /*zahl1 != 0*/) {
+	        switch (zeichen) {
+	          case  '+': 
+	            zahl1 = zahl1.add(zahl3);
+	            break;
+	          case  '-': 
+	            zahl1 = zahl1.subtract(zahl3);
+	            break;
+	          case '*':
+	            zahl1 = zahl1.multiply(zahl3);
+	            break;
+	          case '/':
+	            zahl1 = zahl1.divide(zahl3);
+	            break;
+	          default: 
+	            
+	        } // end of switch
+	      } else {
+	        zahl1 = zahl3;
+	      } // end of if-else
+	      lblOben.setText(zahl1+" "+c);
+	      zahl3 = BigDecimal.valueOf(0);
+	      vorZeichen = c;
+	      zeichen = 'n';
+	      kommaStelle = 0;
+	    } else if (c == '/') {
+	        lblUnten.setText("Teilen durch 0 nicht möglich");
+	        zahl3 = BigDecimal.valueOf(0);
+	      }
+	  }
+	  
+	  public void istGleich() {
+	    zahl3 = BigDecimal.valueOf(Double.valueOf(lblUnten.getText())).stripTrailingZeros();
+	    zahl2 = zahl3;
+	    if (vorZeichen == 'n') {
+	      lblOben.setText(String.valueOf(zahl3)+" =");
+	      lblUnten.setText(String.valueOf(zahl3));  
+	    } else {
+	      zahl2 = zahl3;
+	      switch (vorZeichen) {
+	        case  '+': 
+	          zahl3 = zahl1.add(zahl3);
+	          break;
+	        case  '-': 
+	          zahl3 = zahl1.subtract(zahl3);
+	          break;
+	        case  '*': 
+	          zahl3 = zahl1.multiply(zahl3);
+	          break;
+	        case  '/':
+	          if (!zahl2.equals(BigDecimal.valueOf(0)) /*zahl2 != 0*/) {
+	            zahl3 = zahl1.divide(zahl3);
+	            break;
+	          } else {
+	            lblUnten.setText("Teilen durch 0 nicht möglich");
+	          } // end of if-else 
+	          
+	        default: 
+	          zahl3 = BigDecimal.valueOf(0);
+	      } // end of switch
+
+	      if (!zahl2.equals(BigDecimal.valueOf(0)) /*zahl2 != 0*/) {
+	        lblOben.setText(String.valueOf(zahl1)+" "+ String.valueOf(vorZeichen)+" "+ String.valueOf(zahl2));
+	        lblUnten.setText(String.valueOf(zahl3)); 
+	        
+	      } else {
+	        lblOben.setText(String.valueOf(zahl1)+" "+ String.valueOf(vorZeichen)+" "+ String.valueOf(zahl2));
+	        lblUnten.setText("Teilen durch 0 nicht möglich");
+	      } // end of if-else  
+	    }
+	    zahl1 = zahl3;
+	    zeichen = vorZeichen = 'n';
+	    zahl3 = zahl2 = BigDecimal.valueOf(0);
+	    kommaStelle = 0;
+	    
+	  }
+	      
   // Button Click Event      
   public void btnProzent_ActionPerformed(ActionEvent evt) {
     // TODO hier Quelltext einfügen
@@ -320,23 +413,24 @@ public class Rechner extends JFrame {
   } // end of btnProzent_ActionPerformed
         
   public void btnClearEntry_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    zahl3 = kommaStelle = 0;
+    // Unteres Label löschen
+	zahl3 = BigDecimal.valueOf(0);
+    kommaStelle = 0;
     lblUnten.setText("0");
     System.out.println("CE");
   } // end of btnClearEntry_ActionPerformed
         
   public void btnClear_ActionPerformed(ActionEvent evt) {
     // Alles Zurückseten
-    zahl1 = zahl2 = zahl3 = kommaStelle = 0;
-    //zeichen = vorZeichen = 'n';
+    zahl1 = zahl2 = zahl3 = BigDecimal.valueOf(0);
+    kommaStelle = 0;
+    zeichen = vorZeichen = 'n';
     lblUnten.setText("0");
     lblOben.setText("");
     System.out.println("C");
   } // end of btnClear_ActionPerformed
         
   public void btnDel_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     System.out.println("DEL");
     if (kommaStelle == 0) {
       
@@ -362,77 +456,68 @@ public class Rechner extends JFrame {
   } // end of btnQuadratwurzel_ActionPerformed
         
   public void btnDivision_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("/");
+	  if (logKeys) {System.out.println("KEY: /");}
+	  rechenZeichen('/');
   } // end of btnDivision_ActionPerformed
         
   public void btnSieben_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("7");
+	  if (logKeys) {System.out.println("KEY: 7");}
     numberPressed(7);
   } // end of btnSieben_ActionPerformed
         
   public void btnAcht_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("8");
+	  if (logKeys) {System.out.println("KEY: 8");}
     numberPressed(8);
   } // end of btnAcht_ActionPerformed
         
   public void btnNeun_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("9");
+	  if (logKeys) {System.out.println("KEY: 9");}
     numberPressed(9);
   } // end of btnNeun_ActionPerformed
         
   public void btnMultiplikation_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("*");
+	  if (logKeys) {System.out.println("KEY: *");}
+	  rechenZeichen('*');
   } // end of btnMultiplikation_ActionPerformed
         
   public void btnVier_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("4");
-    numberPressed(4);
+	  if (logKeys) {System.out.println("KEY: 4");}
+	  numberPressed(4);
   } // end of btnVier_ActionPerformed
         
   public void btnFuenf_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("5");
-    numberPressed(5);
+	  if (logKeys) {System.out.println("KEY: 5");}
+	  numberPressed(5);
   } // end of btnFuenf_ActionPerformed
         
   public void btnSechs_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("6");
-    numberPressed(6);
+	  if (logKeys) {System.out.println("KEY: 6");}
+	  numberPressed(6);
   } // end of btnSechs_ActionPerformed
         
   public void btnSubtraktion_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("-");
+	  if (logKeys) {System.out.println("KEY: -");}
+	  rechenZeichen('-');
   } // end of btnSubtraktion_ActionPerformed
         
   public void btnEins_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("1");
-    numberPressed(1);
+	  if (logKeys) {System.out.println("KEY: 1");}
+	  numberPressed(1);
   } // end of btnEins_ActionPerformed
         
   public void btnZwei_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("2");
-    numberPressed(2);
+	  if (logKeys) {System.out.println("KEY: 2");}
+	  numberPressed(2);
   } // end of btnZwei_ActionPerformed
         
   public void btnDrei_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("3");
-    numberPressed(3);
+	  if (logKeys) {System.out.println("KEY: 3");}
+	  numberPressed(3);
   } // end of btnDrei_ActionPerformed
         
   public void btnAddition_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("+");
+	  if (logKeys) {System.out.println("KEY: +");}
+	  rechenZeichen('+');
   } // end of btnAddition_ActionPerformed
         
   public void btnVorzeichenwechsel_ActionPerformed(ActionEvent evt) {
@@ -441,24 +526,22 @@ public class Rechner extends JFrame {
   } // end of btnVorzeichenwechsel_ActionPerformed
         
   public void btnNull_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("0");
-    numberPressed(0);
+	  if (logKeys) {System.out.println("KEY: 0");}
+	  numberPressed(0);
   } // end of btnNull_ActionPerformed
         
   public void btnKomma_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println(",");
-    if (kommaStelle == 0) {
-      kommaStelle = 1;
-    } else {
-      System.out.println("nope kein Komma");
-    } // end of if-else
+	  if (logKeys) {System.out.println("KEY: ,");}
+	  if (kommaStelle == 0) {
+		  kommaStelle = 1;
+	  } else {
+		  System.out.println("nope kein Komma");
+	  } // end of if-else
   } // end of btnKomma_ActionPerformed
         
   public void btnErgebnis_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
-    System.out.println("=");
+	if (logKeys) {System.out.println("KEY: =");}
+	istGleich();
   } // end of btnErgebnis_ActionPerformed
         // Ende Methoden
   
