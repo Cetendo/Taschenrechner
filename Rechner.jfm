@@ -1,0 +1,27 @@
+object Rechner: TFGUIForm
+  Left = 340
+  Top = 346
+  BorderIcons = [biSystemMenu]
+  Caption = 'Rechner'
+  ClientHeight = 262
+  ClientWidth = 288
+  Color = clBtnFace
+  ParentFont = True
+  FormStyle = fsStayOnTop
+  OldCreateOrder = True
+  Position = poDesigned
+  ShowHint = True
+  Visible = True
+  OnCanResize = FormCanResize
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnMouseActivate = FormMouseActivate
+  OnResize = FormResize
+  FrameType = 5
+  Modified = False
+  Resizable = True
+  Undecorated = False
+  Background = clBtnFace
+  PixelsPerInch = 96
+  TextHeight = 15
+end
